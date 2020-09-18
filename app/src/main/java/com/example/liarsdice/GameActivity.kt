@@ -2,6 +2,7 @@ package com.example.liarsdice
 
 import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -14,13 +15,19 @@ class GameActivity : AppCompatActivity() {
     var playerStates = arrayOfNulls<PlayerState>(2)
     var activePlayer = 0
     var preRound = true
+    lateinit var cupImage: ImageView
+    lateinit var diceView: LinearLayout
+    lateinit var passButton: Button
+    lateinit var buttonsView: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-        var cupImage = findViewById<ImageView>(R.id.cupView)
-        var diceView = findViewById<LinearLayout>(R.id.diceView)
-        var passButton = findViewById<Button>(R.id.passButton)
+
+        cupImage = findViewById<ImageView>(R.id.cupView)
+        diceView = findViewById<LinearLayout>(R.id.diceView)
+        passButton = findViewById<Button>(R.id.passButton)
+        buttonsView = findViewById<LinearLayout>(R.id.buttonsView)
 
         //Initialize game state
         val intent = intent
@@ -29,13 +36,41 @@ class GameActivity : AppCompatActivity() {
             playerStates[i] = PlayerState()
         }
 
-        //Cup Image
+        //Initialize cup click
         cupImage.setOnClickListener {
             it.visibility = View.GONE
             diceView.visibility = View.VISIBLE
+            if(preRound) {
+                passButton.visibility = View.VISIBLE
+            } else {
+                buttonsView.visibility = View.VISIBLE
+            }
         }
 
-        //Dice Images
+        //Pass Button
+        passButton.setOnClickListener{
+            activePlayer++
+            if(activePlayer >= numPlayers) {
+                activePlayer = 0
+                preRound = false
+            }
+            setUpViews()
+        }
+
+        setUpViews()
+    }
+
+    fun setUpViews(){
+        //Cup Image
+        cupImage.setImageResource(when{
+            activePlayer == 0 -> R.drawable.cup_red
+            activePlayer == 1 -> R.drawable.cup_blue
+            else -> R.drawable.cup_red
+        })
+        cupImage.visibility = View.VISIBLE
+
+        //Dice
+        diceView.visibility = View.INVISIBLE
         for(i in 0..4){
             var v = diceView.getChildAt(i)
             var die = playerStates[activePlayer]?.dice?.get(i)
@@ -52,11 +87,6 @@ class GameActivity : AppCompatActivity() {
         }
 
         //Pass Button
-        passButton.setOnClickListener{
-            activePlayer++
-            if(activePlayer >= numPlayers) {
-                activePlayer = 0
-            }
-        }
+        passButton.visibility = View.INVISIBLE
     }
 }
