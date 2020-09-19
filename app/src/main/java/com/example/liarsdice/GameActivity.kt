@@ -1,7 +1,9 @@
 package com.example.liarsdice
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -40,13 +42,18 @@ class GameActivity : AppCompatActivity() {
         bidText = findViewById(R.id.bidText)
 
         //Initialize game state
-        val intent = intent
         numPlayers = intent.getIntExtra("numPlayers", 2)
         for(i in 0 until numPlayers){
             playerStates[i] = PlayerState()
+            Log.d("dice", playerStates[i].dice.asList().toString())
             for(d in playerStates[i].dice){
-                diceFreq.put(d, diceFreq.getOrDefault(d, 0) + 1)
+                var new = diceFreq.getOrDefault(d, 0) + 1
+                diceFreq[d] = new
+                Log.d("freq", ""+d + " set to " + new)
             }
+        }
+        for(e in diceFreq.entries){
+            Log.d("freq",e.toString())
         }
 
         //Initialize cup click
@@ -101,11 +108,19 @@ class GameActivity : AppCompatActivity() {
         }
 
         liarButton.setOnClickListener{
+            var resultIntent = Intent(this, ResultActivity::class.java)
+            Log.d("liar", "active: " + activePlayer)
+            Log.d("liar", "bid first: " + bid.first)
+            Log.d("liar", "freq: " + diceFreq.getOrDefault(bid.second, 1))
             if(bid.first <= diceFreq.getOrDefault(bid.second, 1)){
-                Toast.makeText(this, "LOSE", Toast.LENGTH_LONG).show()
+                resultIntent.putExtra("result", "Player " + when{
+                    activePlayer == 0 -> numPlayers
+                    else -> activePlayer
+                } + " wins!")
             } else{
-                Toast.makeText(this, "WIN", Toast.LENGTH_LONG).show()
+                resultIntent.putExtra("result", "Player " + (activePlayer+1) + " wins!")
             }
+            startActivity(resultIntent)
         }
 
         setUpViews()
@@ -132,6 +147,7 @@ class GameActivity : AppCompatActivity() {
                     die == 3 -> R.drawable.die3
                     die == 4 -> R.drawable.die4
                     die == 5 -> R.drawable.die5
+                    die == 6 -> R.drawable.die6
                     else -> R.drawable.die1
                 })
             }
