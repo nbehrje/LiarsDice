@@ -96,12 +96,14 @@ class GameActivity : AppCompatActivity() {
         //Bid Confirm button
         enterBidButton = popupView.findViewById(R.id.enterBidButton)
         enterBidButton.setOnClickListener{
-            val quantity = popupView.findViewById<EditText>(R.id.editQty).text.toString().toInt()
+            val quantity = popupView.findViewById<EditText>(R.id.editQty).text.toString()
             val face = spinner.selectedItemPosition+1
-            if(quantity > bid.first || (face > bid.second && quantity >= bid.first)){
-                bid = Pair(quantity,face)
-                popupWindow.dismiss()
-                passTurn()
+            if(quantity != ""){
+                if(quantity.toInt() > bid.first || (face > bid.second && quantity.toInt() >= bid.first)) {
+                    bid = Pair(quantity.toInt(), face)
+                    popupWindow.dismiss()
+                    passTurn()
+                }
             }
         }
 
