@@ -23,8 +23,10 @@
             android:text="TextView" />
 
         <LinearLayout
+            android:id="@+id/p1dice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginVertical="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -32,12 +34,51 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="Player 1" />
+
+            <ImageView
+                android:id="@+id/res1d1"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res1s2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res1d3"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res1d4"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res1d5"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/p2dice"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginVertical="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -45,7 +86,42 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="Player 2" />
+
+            <ImageView
+                android:id="@+id/res2d1"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res2s2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res2d3"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res2d4"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
+
+            <ImageView
+                android:id="@+id/res2d5"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/die1" />
         </LinearLayout>
 
         <Button

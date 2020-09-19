@@ -45,11 +45,9 @@ class GameActivity : AppCompatActivity() {
         numPlayers = intent.getIntExtra("numPlayers", 2)
         for(i in 0 until numPlayers){
             playerStates[i] = PlayerState()
-            Log.d("dice", playerStates[i].dice.asList().toString())
             for(d in playerStates[i].dice){
                 var new = diceFreq.getOrDefault(d, 0) + 1
                 diceFreq[d] = new
-                Log.d("freq", ""+d + " set to " + new)
             }
         }
         for(e in diceFreq.entries){
@@ -109,9 +107,6 @@ class GameActivity : AppCompatActivity() {
 
         liarButton.setOnClickListener{
             var resultIntent = Intent(this, ResultActivity::class.java)
-            Log.d("liar", "active: " + activePlayer)
-            Log.d("liar", "bid first: " + bid.first)
-            Log.d("liar", "freq: " + diceFreq.getOrDefault(bid.second, 1))
             if(bid.first <= diceFreq.getOrDefault(bid.second, 1)){
                 resultIntent.putExtra("result", "Player " + when{
                     activePlayer == 0 -> numPlayers
@@ -120,7 +115,10 @@ class GameActivity : AppCompatActivity() {
             } else{
                 resultIntent.putExtra("result", "Player " + (activePlayer+1) + " wins!")
             }
+            resultIntent.putExtra("dice1", playerStates[0].dice)
+            resultIntent.putExtra("dice2", playerStates[1].dice)
             startActivity(resultIntent)
+            finish()
         }
 
         setUpViews()
