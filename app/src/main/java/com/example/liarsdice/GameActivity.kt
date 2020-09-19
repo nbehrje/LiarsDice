@@ -1,14 +1,13 @@
 package com.example.liarsdice
 
-import android.opengl.Visibility
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
+
 
 class GameActivity : AppCompatActivity() {
     var numPlayers: Int = 2
@@ -19,15 +18,24 @@ class GameActivity : AppCompatActivity() {
     lateinit var diceView: LinearLayout
     lateinit var passButton: Button
     lateinit var buttonsView: LinearLayout
+    lateinit var bidButton: Button
+    lateinit var liarButton: Button
+    lateinit var spinner: Spinner
+    lateinit var enterBidButton: Button
+    lateinit var bidText: TextView
+    var bid: Pair<Int,Int> = Pair(0,0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        cupImage = findViewById<ImageView>(R.id.cupView)
-        diceView = findViewById<LinearLayout>(R.id.diceView)
-        passButton = findViewById<Button>(R.id.passButton)
-        buttonsView = findViewById<LinearLayout>(R.id.buttonsView)
+        cupImage = findViewById(R.id.cupView)
+        diceView = findViewById(R.id.diceView)
+        passButton = findViewById(R.id.passButton)
+        buttonsView = findViewById(R.id.buttonsView)
+        bidButton = findViewById(R.id.bidButton)
+        liarButton = findViewById(R.id.liarButton)
+        bidText = findViewById(R.id.bidText)
 
         //Initialize game state
         val intent = intent
@@ -55,6 +63,39 @@ class GameActivity : AppCompatActivity() {
                 preRound = false
             }
             setUpViews()
+        }
+
+        //Popup
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val popupView: View = inflater.inflate(R.layout.window_bid, null)
+        spinner = popupView.findViewById(R.id.spinner)
+
+        //Bid Button
+        bidButton.setOnClickListener{
+            val width = LinearLayout.LayoutParams.WRAP_CONTENT
+            val height = LinearLayout.LayoutParams.WRAP_CONTENT
+            val focusable = true
+            val popupWindow = PopupWindow(popupView, width, height, focusable)
+            popupWindow.showAtLocation(it, Gravity.CENTER, 0, 0);
+        }
+
+        //Spinner
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.dice_array,
+            android.R.layout.simple_spinner_item).also{
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = it
+        }
+
+        //Bid Confirm button
+        enterBidButton = popupView.findViewById(R.id.enterBidButton)
+        enterBidButton.setOnClickListener{
+            val quantity = popupView.findViewById<EditText>(R.id.editQty).text.toString().toInt()
+            val face = spinner.selectedItemPosition+1
+            if(quantity > bid.first || (face > bid.second && quantity >= bid.first)){
+                bid = Pair(quantity,face)
+            }
         }
 
         setUpViews()
@@ -88,5 +129,8 @@ class GameActivity : AppCompatActivity() {
 
         //Pass Button
         passButton.visibility = View.INVISIBLE
+
+        //Bid
+        bidText.setText("Last bid: "+ bid.first + " " + bid.second + "s")
     }
 }
