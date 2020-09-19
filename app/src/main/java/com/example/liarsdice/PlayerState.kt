@@ -3,7 +3,7 @@ package com.example.liarsdice
 import kotlin.random.Random
 
 class PlayerState {
-    var dice = arrayOfNulls<Int>(5)
+    var dice = intArrayOf(0,0,0,0,0)
 
     init {
         for (i in 0..4) {

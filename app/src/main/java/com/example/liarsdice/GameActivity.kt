@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class GameActivity : AppCompatActivity() {
     var numPlayers: Int = 2
-    var playerStates = arrayOfNulls<PlayerState>(2)
+    var playerStates = Array(2){PlayerState()}
     var activePlayer = 0
     var preRound = true
     lateinit var cupImage: ImageView
@@ -25,6 +25,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var bidText: TextView
     lateinit var popupWindow: PopupWindow
     var bid: Pair<Int,Int> = Pair(0,0)
+    var diceFreq = HashMap<Int, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +42,11 @@ class GameActivity : AppCompatActivity() {
         //Initialize game state
         val intent = intent
         numPlayers = intent.getIntExtra("numPlayers", 2)
-        for(i in 0..numPlayers-1){
+        for(i in 0 until numPlayers){
             playerStates[i] = PlayerState()
+            for(d in playerStates[i].dice){
+                diceFreq.put(d, diceFreq.getOrDefault(d, 0) + 1)
+            }
         }
 
         //Initialize cup click
@@ -96,6 +100,14 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
+        liarButton.setOnClickListener{
+            if(bid.first <= diceFreq.getOrDefault(bid.second, 1)){
+                Toast.makeText(this, "LOSE", Toast.LENGTH_LONG).show()
+            } else{
+                Toast.makeText(this, "WIN", Toast.LENGTH_LONG).show()
+            }
+        }
+
         setUpViews()
     }
 
@@ -136,7 +148,7 @@ class GameActivity : AppCompatActivity() {
 
         //Action Buttons
         buttonsView.visibility = View.INVISIBLE
-        
+
     }
 
     fun passTurn(){
