@@ -23,6 +23,7 @@ class GameActivity : AppCompatActivity() {
     lateinit var spinner: Spinner
     lateinit var enterBidButton: Button
     lateinit var bidText: TextView
+    lateinit var popupWindow: PopupWindow
     var bid: Pair<Int,Int> = Pair(0,0)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +58,7 @@ class GameActivity : AppCompatActivity() {
 
         //Pass Button
         passButton.setOnClickListener{
-            activePlayer++
-            if(activePlayer >= numPlayers) {
-                activePlayer = 0
-                preRound = false
-            }
-            setUpViews()
+            passTurn()
         }
 
         //Popup
@@ -75,7 +71,7 @@ class GameActivity : AppCompatActivity() {
             val width = LinearLayout.LayoutParams.WRAP_CONTENT
             val height = LinearLayout.LayoutParams.WRAP_CONTENT
             val focusable = true
-            val popupWindow = PopupWindow(popupView, width, height, focusable)
+            popupWindow = PopupWindow(popupView, width, height, focusable)
             popupWindow.showAtLocation(it, Gravity.CENTER, 0, 0);
         }
 
@@ -95,6 +91,8 @@ class GameActivity : AppCompatActivity() {
             val face = spinner.selectedItemPosition+1
             if(quantity > bid.first || (face > bid.second && quantity >= bid.first)){
                 bid = Pair(quantity,face)
+                popupWindow.dismiss()
+                passTurn()
             }
         }
 
@@ -111,7 +109,7 @@ class GameActivity : AppCompatActivity() {
         cupImage.visibility = View.VISIBLE
 
         //Dice
-        diceView.visibility = View.INVISIBLE
+        diceView.visibility = View.GONE
         for(i in 0..4){
             var v = diceView.getChildAt(i)
             var die = playerStates[activePlayer]?.dice?.get(i)
@@ -131,6 +129,22 @@ class GameActivity : AppCompatActivity() {
         passButton.visibility = View.INVISIBLE
 
         //Bid
-        bidText.setText("Last bid: "+ bid.first + " " + bid.second + "s")
+        bidText.setText(when{
+            bid.first == 0 -> "No bids"
+            else -> "Last bid: "+ bid.first + " " + bid.second + "s"
+        })
+
+        //Action Buttons
+        buttonsView.visibility = View.INVISIBLE
+        
+    }
+
+    fun passTurn(){
+        activePlayer++
+        if(activePlayer >= numPlayers) {
+            activePlayer = 0
+            preRound = false
+        }
+        setUpViews()
     }
 }
