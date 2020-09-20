@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class GameActivity : AppCompatActivity() {
     var numPlayers: Int = 2
-    var playerStates = Array(2){PlayerState()}
+    lateinit var playerStates: Array<PlayerState>
     var activePlayer = 0
     var preRound = true
     lateinit var cupImage: ImageView
@@ -43,6 +43,7 @@ class GameActivity : AppCompatActivity() {
 
         //Initialize game state
         numPlayers = intent.getIntExtra("numPlayers", 2)
+        playerStates = Array(numPlayers){PlayerState()}
         for(i in 0 until numPlayers){
             playerStates[i] = PlayerState()
             for(d in playerStates[i].dice){
@@ -117,8 +118,9 @@ class GameActivity : AppCompatActivity() {
             } else{
                 resultIntent.putExtra("result", "Player " + (activePlayer+1) + " wins!")
             }
-            resultIntent.putExtra("dice1", playerStates[0].dice)
-            resultIntent.putExtra("dice2", playerStates[1].dice)
+            for(p in 0 until numPlayers){
+                resultIntent.putExtra("dice"+(p+1), playerStates[p].dice)
+            }
             startActivity(resultIntent)
             finish()
         }
@@ -131,6 +133,8 @@ class GameActivity : AppCompatActivity() {
         cupImage.setImageResource(when{
             activePlayer == 0 -> R.drawable.cup_red
             activePlayer == 1 -> R.drawable.cup_blue
+            activePlayer == 2 -> R.drawable.cup_yellow
+            activePlayer == 3 -> R.drawable.cup_green
             else -> R.drawable.cup_red
         })
         cupImage.visibility = View.VISIBLE

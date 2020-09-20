@@ -1,6 +1,7 @@
 package com.example.liarsdice
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -12,6 +13,10 @@ class ResultActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
+        var closeButton: Button = findViewById(R.id.closeButton)
+        closeButton.setOnClickListener{
+            finish()
+        }
         val result = intent.getStringExtra("result")
         var resultText: TextView = findViewById(R.id.resultText)
         resultText.text = result
@@ -23,10 +28,15 @@ class ResultActivity : AppCompatActivity(){
         val p2Dice: LinearLayout = findViewById(R.id.p2dice)
         populateDice(dice2, p2Dice)
 
-        var closeButton: Button = findViewById(R.id.closeButton)
-        closeButton.setOnClickListener{
-            finish()
-        }
+        val dice3 = intent.getIntArrayExtra("dice3") ?: return
+        val p3Dice: LinearLayout = findViewById(R.id.p3dice)
+        p3Dice.visibility = View.VISIBLE
+        populateDice(dice3, p3Dice)
+
+        val dice4 = intent.getIntArrayExtra("dice4") ?: return
+        val p4Dice: LinearLayout = findViewById(R.id.p4dice)
+        p4Dice.visibility = View.VISIBLE
+        populateDice(dice4, p4Dice)
     }
 
     fun populateDice(dice: IntArray, diceLayout: LinearLayout){
